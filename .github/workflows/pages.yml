@@ -23,14 +23,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Rebuild lightweight study site
+        run: |
+          mkdir -p public
+          cat bundle/part*.b64 | base64 -d > /tmp/site.tgz
+          tar -xzf /tmp/site.tgz -C public
+          touch public/.nojekyll
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "public"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
